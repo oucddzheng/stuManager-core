@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu_system.system.mapper.SysRoleMapper">
+   
+    <!-- 在数据库中的字段 -->
+    <!-- id, code, role_name, create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr -->
+	<!-- 在model中的属性
+	    private String roleName;
+	-->
+	<resultMap id="BaseResultMap" type="stu_system.system.model.SysRoleModel">
+		
+		
+		<result column="id" property="id"/>
+		<result column="code" property="code" />
+		<result column="role_name" property="roleName" />
+		
+				
+		<!-- <result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" /> -->
+		
+	</resultMap> 
+
+	<sql id="Base_Column_List">
+	   id, code, role_name, create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr
+	</sql>
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				and id = #{id}
+			</if>		 	
+			<if test=" code != null and code != ''">
+				and  code = #{code}
+			</if>
+			
+			<if test=" roleName != null and roleName != ''">
+			   and  role_name = #{roleName}
+			</if>			 
+		</trim>
+	</sql>
+	<!-- 插入记录  , 该语句已经验证成功，请勿修改-->
+	<!-- <insert id="insert"  parameterType="Object">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into commodity_information
+		(commodity_name, commodity_code, commodity_price, commodity_descr, commodity_stock, seller_id, commodity_state, first_commodity_classification_id, second_commodity_classification_id, first_commodity_classification_code, second_commodity_classification_code, create_time, update_time, creator, updater, is_delete, is_effect)
+		values  
+		(#{commodityName}, #{commodityCode}, #{commodityPrice},#{commodityDescr}, #{CommodityStock}, #{SellerId}, #{commodityState},
+		#{firstCommodityClassificationId}, #{secondCommodityClassificationId}, #{firstCommodityClassificationCode}, #{seconCommodityClassificationCode},
+		#{createTime}, #{updateTime}, #{creator}, #{updater}, #{isDelete}, #{isEffect})
+	</insert>	 -->
+	<!-- 删除记录 -->
+	<!-- <delete id="delete" parameterType="Object">
+		delete from sys_user where id = #{id}
+	</delete>
+	
+	<delete id="deleteModel" parameterType="Object">
+		delete from sys_user
+		<include refid="Example_Where_Clause" />
+	</delete> -->
+
+	<!-- 根据id，修改记录 -->
+	<!-- <update id="update" parameterType="Object">
+		update sys_user set
+		update_time = now(), update_by = #{updateBy}, deleted = #{deleted}, state = #{state}, 
+		order_by = #{orderBy}, name = #{name}, code = #{code}, descr = #{descr}, type=#{type}
+		, email = #{email}, pwd = #{pwd}, admin = #{admin}, login_count = #{loginCount}, login_time = #{loginTime}
+		where id = #{id}
+	</update> -->
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<!-- <update id="updateActive" parameterType="Object">
+		update sys_user set
+		<trim suffixOverrides=",">
+			<if test="updateTime == null ">
+				update_time = now(),
+			</if>
+			<if test="updateBy != null ">
+				update_by = #{updateBy},
+			</if>
+			<if test="deleted != null ">
+				deleted = #{deleted},
+			</if>
+			<if test="state != null ">
+				state = #{state},
+			</if>
+			<if test="orderBy != null ">
+				order_by = #{orderBy},
+			</if>
+			<if test="name != null and name != '' ">
+				name = #{name},
+			</if>
+			<if test="code != null and code != '' ">
+				code = #{code},
+			</if>
+			<if test="descr != null ">
+				descr = #{descr},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="email != null and email != '' ">
+				email = #{email},
+			</if>
+			<if test="pwd != null and pwd != '' ">
+				pwd = #{pwd},
+			</if>
+			<if test="admin != null  ">
+				admin = #{admin},
+			</if>
+			<if test="loginCount != null  ">
+				login_count = #{loginCount},
+			</if>
+			<if test="loginTime != null  ">
+				login_time = #{loginTime},
+			</if>
+		</trim>
+		where id = #{id}
+	</update> -->
+	<!-- 根据id查询 系统用户 -->
+	<!-- <select id="selectId" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from commodity_information where id = #{id}
+	</select> -->
+
+	<!-- 系统用户 列表总数 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from role <!-- where id = #{id} -->
+	  <!-- <include refid="Example_Where_Clause" /> -->
+	</select>
+
+	<!-- 查询系统用户列表 -->
+	<!-- <select id="selectModel" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from commodity_information
+		<include refid="Example_Where_Clause" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		<if test="pager.mysqlQueryCondition != null and pager.mysqlQueryCondition != ''">
+			${pager.mysqlQueryCondition}
+		</if>
+	</select>
+	 -->
+	<!-- 查询全部的商品，该查询语句可以设置排序的功能 -->
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
+		select id, code, role_name
+		from role where 1=1
+	   <if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+	   </if>
+	</select>
+
+</mapper> 

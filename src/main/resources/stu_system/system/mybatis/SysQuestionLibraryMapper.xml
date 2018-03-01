@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu_system.system.mapper.SysQuestionLibraryMapper">
+
+   
+	
+      
+     <resultMap id="BaseResultMap" type="stu_system.system.model.SysQuestionLibraryModel">
+		
+		
+		<result column="id" property="id"/>
+		<result column="code" property="code" />
+		<result column="user_code" property="userCode" />
+		<result column="question_title" property="questionTitle" />
+			
+		<result column="question_option" property="questionOption" />
+		<result column="question_answer" property="questionAnswer" />	
+		
+	    <result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" /> 
+		<result column="descr" property="descr" /> 
+		
+	</resultMap> 
+
+	<sql id="Base_Column_List">
+       id, code, user_code, question_title, question_option, question_answer, 
+       create_time, update_time, creator, updater, is_delete, is_effect,  descr	</sql>
+	<!-- 查询条件 -->
+	
+	 
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				and id = #{id}
+			</if>		 	
+			<if test=" code != null and code != ''">
+				and  code = #{code}
+			</if>
+			
+			<if test=" userCode != null and userCode != ''">
+			   and  user_code = #{userCode}
+			</if>
+			<if test=" questionTitle != null and questionTitle != ''">
+			   and question_title like CONCAT('%', #{questionTitle}, '%')
+			</if>		
+			
+			<if test=" questionOption != null and questionOption != ''">
+			   and question_option = #{questionOption}
+			</if>		
+			<if test=" questionAnswer != null and questionAnswer != ''">
+			   and question_answer  = #{questionAnswer}
+			</if>		
+			<if test=" isDelete != null ">
+			   and is_delete = #{isDelete}
+			</if>					
+			<if test=" isEffect != null ">
+			   and is_effect = #{isEffect}
+			</if>
+			<if test=" descr!= null and descr != ''">			
+			   and descr like CONCAT('%', #{descr}, '%')
+			</if>				 		
+		</trim>
+	</sql>
+	
+	
+	
+	<insert id="insert"  parameterType="Object">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		
+		
+		
+		insert into question_library
+		(
+		  code, user_code, question_title, question_option, question_answer, 
+          create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr
+		)
+		values  
+		( 
+		  #{code}, #{userCode},#{questionTitle}, #{questionOption}, #{questionAnswer}, 
+		  #{createTime}, #{updateTime}, #{creator}, #{updater}, #{isDelete}, #{isEffect},  #{orderBy},  #{descr} 
+		 )
+	</insert>	 
+	<!-- 删除记录 -->
+	<!-- <delete id="delete" parameterType="Object">
+		delete from sys_user where id = #{id}
+	</delete>
+	
+	<delete id="deleteModel" parameterType="Object">
+		delete from sys_user
+		<include refid="Example_Where_Clause" />
+	</delete> -->
+
+	<!-- 根据id，修改记录 -->
+	<!-- <update id="update" parameterType="Object">
+		update sys_user set
+		update_time = now(), update_by = #{updateBy}, deleted = #{deleted}, state = #{state}, 
+		order_by = #{orderBy}, name = #{name}, code = #{code}, descr = #{descr}, type=#{type}
+		, email = #{email}, pwd = #{pwd}, admin = #{admin}, login_count = #{loginCount}, login_time = #{loginTime}
+		where id = #{id}
+	</update> -->
+
+   <!-- 在数据库中的列
+       id, code, user_code, question_title, question_option, question_answer, 
+       create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr
+    -->
+   
+      <!-- 在model中的属性
+    
+        private String userCode;
+		private String questionTitle;
+		private String questionOption;
+		private String questionAnswer;
+    
+     -->
+   
+	<!-- 修改记录，只修改不为空的字段 -->
+     <update id="updateActive" parameterType="Object">
+		update question_library set
+		<trim suffixOverrides=",">	
+		    <if test="questionTitle != null and questionTitle != ''">
+				question_title =#{questionTitle},
+			</if>			
+			<if test="questionOption != null and questionOption != ''">
+			    question_option = #{questionOption},			   
+			</if>			
+			<if test="questionAnswer!= null and questionAnswer != ''">			
+			   question_answer = #{questionAnswer},
+			  
+			</if>													
+			<if test="updateTime != null and updateTime != ''">
+				 update_time = #{updateTime},
+			</if>
+			
+			<if test="updater != null and updater != ''">
+				 updater = #{updater},
+			</if>	
+			<if test="isDelete != null">
+				 is_delete = #{isDelete},
+			</if>			
+			<if test="isEffect != null">
+				 is_effect = #{isEffect},
+			</if>			  
+			<if test=" descr!= null and descr != ''">			
+			    descr = #{descr},
+			</if>							
+		</trim>
+		where id = #{id}
+	</update> 
+	<!-- 根据id查询 系统用户 -->
+	<!-- <select id="selectId" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from commodity_information where id = #{id}
+	</select> -->
+
+	<!-- 系统用户 列表总数 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from question_library  <!-- where id = #{id} -->
+	    <include refid="Example_Where_Clause" /> 
+	</select>
+   
+	<!-- 查询系统用户列表 -->
+	 <select id="selectModel" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from question_library
+		<include refid="Example_Where_Clause" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		<if test="pager.mysqlQueryCondition != null and pager.mysqlQueryCondition != ''">
+			${pager.mysqlQueryCondition}
+		</if>
+	</select>
+	
+	<!-- 查询全部的商品，该查询语句可以设置排序的功能 -->
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from class <include refid="Example_Where_Clause" /> 
+	   <if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+	 </if>	
+	</select>
+     
+     <resultMap id="ResultMapForAssignmentAndAssignment_condition" type="stu_system.system.model.SysAasignmentModel">
+		
+		
+		<result column="id" property="id"/>
+		<result column="code" property="code" />
+		<result column="time" property="time" />
+		<result column="teacher_code" property="teacherCode" />
+		
+		<result column="homework_name" property="homeworkName"/>
+		<result column="grade_standard" property="gradeStandard"/>
+		<result column="type" property="type" />
+		<result column="name_Aasignment_type" property="typeName" />
+		<result column="descr" property="descr" />
+						
+	   <!--  <result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" />  -->
+		
+		<association property="sysAssignmentConditionModel" javaType="stu_system.system.model.SysAssignmentConditionModel">
+			<!-- id:声明主键，表示user_id是关联查询对象的唯一标识-->
+			<!-- <id property="id" column="id" /> --> 
+			<result property="oneselfScore" column="oneself_score" /> 
+			<result property="oneselfGrade" column="oneself_grade" />
+			<result property="oneselfGradeName" column="oneself_grade_name" />
+			
+			<result property="teacherScore" column="teacher_score" /> 
+			<result property="teacherGrade" column="teacher_grade" />
+			<result property="teacherGradeName" column="teacher_grade_name" />
+	   </association>
+		
+	</resultMap>  
+      <select id="selectAssignmentAndAssignment_conditionAndUser" resultMap="ResultMapForAssignmentAndAssignment_condition" parameterType="Object">
+				
+         select             
+           a.id, a.code, a.time, a.teacher_code, a.homework_name, a.grade_standard, a.type, a.descr,          
+           ac.student_code , ac.oneself_score, ac.oneself_grade, ac.teacher_score, ac.teacher_grade, 
+		   
+           (SELECT d.name FROM stu_system.dictionary d where d.code = oneself_grade) oneself_grade_name,
+		   (SELECT d.name FROM stu_system.dictionary d where d.code = teacher_grade) teacher_grade_name,
+           
+		    d.name  name_Aasignment_type
+		    from stu_system.assignment a 
+	        left join ( select * from stu_system.assignment_condition where student_code = #{code} ) ac on a.code = ac.assignment_code 
+	        left join stu_system.dictionary d  on a.type = d.code	
+	        where teacher_code = (select code from stu_system.user where class_code = ${classCode} and role_code = 2) <!-- 在这里class_code 用的是$ 不是#是因为在建user表的时候class_code建成了int类型的，在usermodel中建成了String类型，是一个失误。在这里是一个取巧的做法  -->
+	       	order by time 	
+	</select>
+  
+   <resultMap id="ResultMapForAssignment_conditionCheck" type="stu_system.system.model.SysAssignmentConditionModel">
+		<result property="oneselfScore" column="oneself_score" /> 
+	    <result property="oneselfGrade" column="oneself_grade" />
+		<result property="oneselfGradeName" column="oneself_grade_name" />		
+			
+		<association property="sysUserModel" javaType="stu_system.system.model.SysUserModel">
+			<!-- id:声明主键，表示user_id是关联查询对象的唯一标识-->
+			<!-- <id property="id" column="id" /> --> 
+			<result column="user_true_name" property="userTrueName"/>	
+	   </association>
+		
+	</resultMap>  
+  
+  
+    <select id="selectUserAndAssignment_condition" resultMap="ResultMapForAssignment_conditionCheck" parameterType="Object">				
+        select  
+         u.user_true_name,  ac.oneself_score, ac.oneself_grade   ,        				
+           (SELECT d.name FROM stu_system.dictionary d where d.code = oneself_grade) oneself_grade_name     
+		             from  (select * from stu_system.user  where class_code = (select class_code from stu_system.user where code = #{teacherCode}) and role_code = 1) u
+		             left join (select * from stu_system.assignment_condition where assignment_code = #{code}) ac on u.code = ac.student_code 
+                      
+	</select>
+
+
+</mapper>

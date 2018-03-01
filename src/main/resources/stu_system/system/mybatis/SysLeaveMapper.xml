@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu_system.system.mapper.SysLeaveMapper">
+    <!-- 数据库中的所有字段
+       id, code, user_code, why, begin_time, end_time, status, create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr
+      -->
+      
+    <!-- model中对应的属性
+    
+    private String userCode;
+	private String why;
+	private String beginTime;
+	private String endTime;
+	private Integer status;
+	private String statusName;
+	   
+    
+     -->  
+	<!-- Result Map -->
+	
+	<resultMap id="BaseResultMap" type="stu_system.system.model.SysLeaveModel">
+		<result column="id" property="id" />
+		<result column="code" property="code" />
+		<result column="user_account" property="userAccount" />
+		<result column="user_password" property="userPassword" />
+		<result column="user_true_name" property="userTrueName" />
+		<result column="telephone" property="userTelephone" />
+		<result column="role_code" property="roleCode" />
+		<result column="class_code" property="classCode" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" />		
+		<result column="descr" property="descr"/> 
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		  id, code, name, parent_code, type, create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr		
+	</sql>
+
+	<!-- 查询条件，数据库中表的每一个字段都要写出来，数据库表中有多少个字段，在这里就写多少个，一个都不能少，并与model中的属性一一对应 -->
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				and id = #{id}
+			</if>		 	
+			<if test="userAccount != null and userAccount != ''">
+				and user_account like CONCAT('%', #{userAccount}, '%')
+			</if>
+			
+			<if test="userPassword != null and userPassword != ''">
+			   and  user_password = #{userPassword}
+			   
+			</if>			
+			
+			<if test=" userTrueName!= null and userTrueName != ''">			
+			   and user_true_name like CONCAT('%', #{userTrueName}, '%')
+			</if>
+			
+			
+			<if test="userTelephone != null and userTelephone != ''">
+				and telephone  = #{userTelephone}
+			</if>
+			
+			<if test="roleCode != null and roleCode != ''">
+				and role_code  = #{roleCode}
+			</if>
+			
+			<if test=" classCode != null and classCode != ''">
+				and class_code = #{classCode}
+			</if>	
+			
+			<if test="createTime != null and createTime != ''">
+				and create_time  = #{createTime}
+			</if>
+			
+			<if test="updateTime != null and updateTime != ''">
+				and update_time = #{updateTime}
+			</if>
+			
+			<if test="creator != null and creator != ''">
+				and creator = #{creator}
+			</if>
+			
+			<if test="updater != null and updater != ''">
+				and updater = #{updater}
+			</if>	
+			<if test="isDelete != null">
+				and is_delete = #{isDelete}
+			</if>			
+			<if test="isEffect != null">
+				and is_effect = #{isEffect}
+			</if>			  
+			<if test=" descr!= null and descr != ''">			
+			   and descr like CONCAT('%', #{descr}, '%')
+			</if>
+		</trim>
+	</sql>
+
+	<!-- 插入记录 -->
+	<insert id="insert"  parameterType="Object">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		
+		insert into leave_table
+		(code, user_code, why, begin_time, end_time, status, 
+		create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr)
+		values
+		(#{code}, #{userCode}, #{why},#{beginTime}, #{endTime}, #{status},
+		#{createTime}, #{updateTime}, #{creator}, #{updater}, #{isDelete}, #{isEffect}, #{orderBy}, #{descr})
+		<!--  now(), now(),一般不用这种格式，一般是在java中将时间取出来  -->
+	</insert>
+	    
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="Object">
+		delete from sys_user where id = #{id}
+	</delete>
+	
+	<delete id="deleteModel" parameterType="Object">
+		delete from sys_user
+		<include refid="Example_Where_Clause" />
+	</delete>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="Object">
+		update user set		
+		user_account = #{userAccount} , user_password = #{userPassword}, user_true_name = #{userTrueName}, telephone = #{userTelephone}, 
+		role_code = #{roleCode}, class_code = #{classCode}, 
+		update_time = #{updateTime}, updater = #{updater}, descr = #{descr}
+		where id = #{id}
+	</update>
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateActive" parameterType="Object">
+		update leave_table set
+		
+		<trim suffixOverrides=",">
+				
+			<if test="userCode != null and userCode != ''">
+				user_code = #{userCode} ,
+			</if>
+			
+			<if test="why != null and why != ''">
+			    why = #{why},
+			</if>			
+			
+			<if test=" beginTime!= null and beginTime != ''">			
+			   begin_time = #{beginTime},
+			</if>			
+			<if test="endTime != null and endTime != ''">
+				end_time  = #{endTime},
+			</if>
+			
+			<if test="status != null ">
+				status  = #{status},
+			</if>			
+			<if test="createTime != null and createTime != ''">
+				create_time  = #{createTime},
+			</if>
+			
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime},
+			</if>
+			
+			<if test="creator != null and creator != ''">
+				creator = #{creator},
+			</if>
+			
+			<if test="updater != null and updater != ''">
+				updater = #{updater},
+			</if>	
+			<if test="isDelete != null">
+				is_delete = #{isDelete},
+			</if>			
+			<if test="isEffect != null">
+				is_effect = #{isEffect},
+			</if>			  
+			<if test=" descr!= null and descr != ''">			
+			   descr =  #{descr},
+			</if>
+		</trim>
+		where id = #{id}
+	</update>
+	<!-- 根据id查询 系统用户 -->
+	<select id="selectId" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from sys_user where id = #{id}
+	</select>
+
+	<!-- 系统用户 列表总数 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from leave_table
+	</select>
+
+	<!-- 查询系统用户列表 -->
+	<select id="selectModel" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from user_information
+		<include refid="Example_Where_Clause" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		<if test="pager.mysqlQueryCondition != null and pager.mysqlQueryCondition != ''">
+			${pager.mysqlQueryCondition}
+		</if>
+	</select>
+	
+	<!-- 查询系统用户列表 -->
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from user
+		<include refid="Example_Where_Clause" /> 
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+	</select>
+	<!-- 用于user表和role表的关联查询 -->
+    <resultMap id="UserAndRoleResultMap" type="stu_system.system.model.SysLeaveModel">
+		<result column="id" property="id" />
+		<result column="codeInUser" property="code" />
+		<result column="user_account" property="userAccount" />
+		<result column="user_password" property="userPassword" />
+		<result column="user_true_name" property="userTrueName" />
+		<result column="telephone" property="userTelephone" />
+		<result column="role_code" property="roleCode" />
+		<result column="class_code" property="classCode" />
+		<!-- <association property="sysRoleModel" javaType="stu_system.system.model.SysRoleModel">
+			id:声明主键，表示user_id是关联查询对象的唯一标识
+			<id property="id" column="id" /> 
+			<result property="code" column="codeInRole" /> 
+			<result property="roleName" column="role_name" />
+	   </association> -->
+	</resultMap>	
+	<select id="selectUserAndRole" resultMap="UserAndRoleResultMap" parameterType="Object">
+		select u.id, u.code codeInUser, u.user_account, u.user_password, u.user_true_name, u.telephone,
+	    u.role_code, u.class_code,  r.code codeInRole,r.role_name
+		from user u
+		     left join role r on u.role_code = r.code		     
+	    <include refid="Example_Where_Clause" /> 
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+	</select>
+	
+	<sql id="Example_Where_Clause2">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				and lt.id = #{id}
+			</if>	
+			<if test="code != null and code != ''">
+				and  lt.code = #{code}
+			</if>	 	
+			<if test="userCode != null and userCode != ''">
+				and  lt.user_code = #{userCode}
+			</if>
+			
+			<if test="why != null and why != ''">
+			   and lt.why like CONCAT('%', #{why}, '%')
+			</if>			
+			
+			<if test=" beginTime!= null and beginTime != ''">			
+			   and  lt.begin_time = #{beginTime}
+			</if>			
+			<if test="endTime != null and endTime != ''">
+				and lt.end_time  = #{endTime}
+			</if>
+			
+			<if test="status != null ">
+				and lt.status  = #{status}
+			</if>
+			
+			
+			<if test="createTime != null and createTime != ''">
+				and lt.create_time  = #{createTime}
+			</if>
+			
+			<if test="updateTime != null and updateTime != ''">
+				and lt.update_time = #{updateTime}
+			</if>
+			
+			<if test="creator != null and creator != ''">
+				and lt.creator = #{creator}
+			</if>
+			
+			<if test="updater != null and updater != ''">
+				and lt.updater = #{updater}
+			</if>	
+			<if test="isDelete != null">
+				and lt.is_delete = #{isDelete}
+			</if>			
+			<if test="isEffect != null">
+				and lt.is_effect = #{isEffect}
+			</if>			  
+			<if test=" descr!= null and descr != ''">			
+			   and lt.descr like CONCAT('%', #{descr}, '%')
+			</if>
+		</trim>
+	</sql>
+	     <!-- private String userCode;
+			private String why;
+			private String beginTime;
+			private String endTime;
+			private Integer status;
+			private String statusName; -->
+			<!-- id, code, user_code, why, begin_time, end_time, status, create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr -->
+	<!-- 		it.id, it.code, it.user_code, it.why, it.begin_time, it.end_time, it.status, it.create_time, it.update_time, it.creator, it.updater, it.is_delete, it.is_effect, it.orderby, it.descr,
+	 -->
+	
+	<!-- 查询user , role , class 三张表单的映射 -->
+	<resultMap id="leavetableUserDictionaryResultMap" type="stu_system.system.model.SysLeaveModel">
+		
+		
+		<result column="id" property="id" />
+		<result column="code" property="code" />
+		<result column="user_code" property="userCode"/>
+		<result column="why" property="why" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="status" property="status" />
+		<result column="name" property="statusName" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" />	
+		<result column="descr" property="descr" />
+		<association property="sysUserModel" javaType="stu_system.system.model.SysUserModel">
+			<!-- id:声明主键，表示user_id是关联查询对象的唯一标识-->
+			<!-- <id property="id" column="id" /> --> 
+			<result property="code" column="codeInUser" /> 
+			<result property="userTrueName" column="user_true_name" />
+	   </association>
+	</resultMap>	
+	<!-- 用来查询leave_table， user , 和  dictionary 这三张表 -->
+	<select id="selectLeaveTableAndUserAndDictionary" resultMap="leavetableUserDictionaryResultMap" parameterType="Object">
+		select 
+		lt.id, lt.code, lt.user_code, lt.why, lt.begin_time, lt.end_time, lt.status, lt.create_time, lt.update_time, lt.creator, lt.updater, lt.is_delete, lt.is_effect, lt.orderby, lt.descr,
+	    u.code codeInUser , u.user_true_name,
+	    d.name
+		from leave_table lt
+		     left join user u on lt.user_code = u.code	
+		     left join dictionary d on lt.status = d.code	     
+	  <include refid="Example_Where_Clause2" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		
+	</select>
+     
+     <select id="selectLeaveTableAndUserAndDictionaryByTeacher" resultMap="leavetableUserDictionaryResultMap" parameterType="Object">
+		select 
+		lt.id, lt.code, lt.user_code, lt.why, lt.begin_time, lt.end_time, lt.status, lt.create_time, lt.update_time, lt.creator, lt.updater, lt.is_delete, lt.is_effect, lt.orderby, lt.descr,
+	    u.code codeInUser , u.user_true_name,
+	    d.name
+		from leave_table lt
+		     left join user u on lt.user_code = u.code	
+		     left join dictionary d on lt.status = d.code	     
+	    where lt.user_code in (select  code from stu_system.user where class_code = #{code} ) and lt.status = 3 and lt.is_effect = 1
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		<if test="pager.mysqlQueryCondition != null and pager.mysqlQueryCondition != ''">
+			${pager.mysqlQueryCondition}
+		</if>
+	</select>
+	
+	<select id="selectLeaveTableAndUserAndDictionaryForRecordByTeacher" resultMap="leavetableUserDictionaryResultMap" parameterType="Object">
+		select 
+		lt.id, lt.code, lt.user_code, lt.why, lt.begin_time, lt.end_time, lt.status, lt.create_time, lt.update_time, lt.creator, lt.updater, lt.is_delete, lt.is_effect, lt.orderby, lt.descr,
+	    u.code codeInUser , u.user_true_name,
+	    d.name
+		from leave_table lt
+		     left join user u on lt.user_code = u.code	
+		     left join dictionary d on lt.status = d.code	     
+	    where lt.user_code in (select  code from stu_system.user where class_code = #{code} ) 
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		
+	</select>
+	
+</mapper>   

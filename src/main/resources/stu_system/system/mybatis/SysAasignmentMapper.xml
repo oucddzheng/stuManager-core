@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu_system.system.mapper.SysAasignmentMapper">
+
+     
+      
+     <resultMap id="BaseResultMap" type="stu_system.system.model.SysClassModel">
+		
+		
+		<result column="id" property="id"/>
+		<result column="code" property="code" />
+		<result column="class_name" property="className" />
+		<result column="teacher_code" property="teacherCode" />
+				
+		<!-- <result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" /> -->
+		
+	</resultMap> 
+
+	<sql id="Base_Column_List">
+	   id, code, time, teacher_code, homework_name, grade_standard, type, 
+	   create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr 
+	</sql>
+	<!-- 查询条件 -->	
+	<sql id="Example_Where_Clause">
+		where 1=1
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				and id = #{id}
+			</if>		 	
+			<if test=" code != null and code != ''">
+				and  code = #{code}
+			</if>
+			
+			<if test=" teacherCode != null and teacherCode != ''">
+			   and  teacher_code = #{teacherCode}
+			</if>
+			<if test=" homeworkName != null and homeworkName != ''">
+			   and homework_name  = #{homeworkName}
+			</if>				 
+		    <if test=" gradeStandard != null and gradeStandard != ''">
+				and  grade_standard = #{gradeStandard}
+			</if>
+			
+			<if test=" type != null ">
+			   and  type = #{type}
+			</if>			
+			<if test="createTime != null and createTime != ''">
+				and create_time  = #{createTime}
+			</if>
+			
+			<if test="updateTime != null and updateTime != ''">
+				and update_time = #{updateTime}
+			</if>			
+			<if test="creator != null and creator != ''">
+				and creator = #{creator}
+			</if>			
+			<if test="updater != null and updater != ''">
+				and updater = #{updater}
+			</if>	
+			<if test="isDelete != null">
+				and is_delete = #{isDelete}
+			</if>			
+			<if test="isEffect != null">
+				and is_effect = #{isEffect}
+			</if>			  
+			<if test=" descr!= null and descr != ''">			
+			   and descr like CONCAT('%', #{descr}, '%')
+			</if>				
+		</trim>
+	</sql>
+	<!-- 插入记录  , 该语句已经验证成功，请勿修改-->
+	 <insert id="insert"  parameterType="Object">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into assignment	
+		
+		(code, time ,teacher_code, homework_name, grade_standard, type,
+         create_time, update_time, creator, updater, is_delete, is_effect , orderby , descr)
+		values  
+		(#{code}, #{time}, #{teacherCode}, #{homeworkName},#{gradeStandard}, #{type}, 
+		#{createTime}, #{updateTime}, #{creator}, #{updater}, #{isDelete}, #{isEffect} , #{orderBy} , #{descr})
+	</insert>	
+	<!-- 删除记录 -->
+	<!-- <delete id="delete" parameterType="Object">
+		delete from sys_user where id = #{id}
+	</delete>
+	
+	<delete id="deleteModel" parameterType="Object">
+		delete from sys_user
+		<include refid="Example_Where_Clause" />
+	</delete> -->
+
+	<!-- 根据id，修改记录 -->
+	<!-- <update id="update" parameterType="Object">
+		update sys_user set
+		update_time = now(), update_by = #{updateBy}, deleted = #{deleted}, state = #{state}, 
+		order_by = #{orderBy}, name = #{name}, code = #{code}, descr = #{descr}, type=#{type}
+		, email = #{email}, pwd = #{pwd}, admin = #{admin}, login_count = #{loginCount}, login_time = #{loginTime}
+		where id = #{id}
+	</update> -->
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<!-- <update id="updateActive" parameterType="Object">
+		update sys_user set
+		<trim suffixOverrides=",">
+			<if test="updateTime == null ">
+				update_time = now(),
+			</if>
+			<if test="updateBy != null ">
+				update_by = #{updateBy},
+			</if>
+			<if test="deleted != null ">
+				deleted = #{deleted},
+			</if>
+			<if test="state != null ">
+				state = #{state},
+			</if>
+			<if test="orderBy != null ">
+				order_by = #{orderBy},
+			</if>
+			<if test="name != null and name != '' ">
+				name = #{name},
+			</if>
+			<if test="code != null and code != '' ">
+				code = #{code},
+			</if>
+			<if test="descr != null ">
+				descr = #{descr},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="email != null and email != '' ">
+				email = #{email},
+			</if>
+			<if test="pwd != null and pwd != '' ">
+				pwd = #{pwd},
+			</if>
+			<if test="admin != null  ">
+				admin = #{admin},
+			</if>
+			<if test="loginCount != null  ">
+				login_count = #{loginCount},
+			</if>
+			<if test="loginTime != null  ">
+				login_time = #{loginTime},
+			</if>
+		</trim>
+		where id = #{id}
+	</update> -->
+	<!-- 根据id查询 系统用户 -->
+	<!-- <select id="selectId" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from commodity_information where id = #{id}
+	</select> -->
+
+	<!-- 系统用户 列表总数 -->
+	<select id="selectCount" resultType="java.lang.Integer" parameterType="Object">
+		select count(1) from assignment <!-- where id = #{id} -->
+	  <!-- <include refid="Example_Where_Clause" /> -->
+	</select>
+   
+	<!-- 查询系统用户列表 -->
+	<!-- <select id="selectModel" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from commodity_information
+		<include refid="Example_Where_Clause" />
+		<if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+		</if>
+		<if test="pager.mysqlQueryCondition != null and pager.mysqlQueryCondition != ''">
+			${pager.mysqlQueryCondition}
+		</if>
+	</select>
+	 -->
+	<!-- 查询全部的商品，该查询语句可以设置排序的功能 -->
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" />
+		from class <include refid="Example_Where_Clause" /> 
+	   <if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+	   </if>
+	</select>
+     
+     <!-- id, code,time, teacher_code, homework_name, grade_standard, type, 
+		create_time, update_time, creator, updater, is_delete, is_effect, orderby, descr -->
+		
+		<!--private String time 
+		private String teacherCode;
+     private String homeworkName;
+     private String gradeStandard; -->
+     
+     <sql id="Base_Column_List2">
+	   a.id, a.code, a.time, a.teacher_code, a.homework_name, a.grade_standard, a.type, 
+	   a.create_time, a.update_time, a.creator, a.updater, a.is_delete, a.is_effect, a.orderby, a.descr 
+	</sql>
+     <resultMap id="BaseResultMap2" type="stu_system.system.model.SysAasignmentModel">		
+		<result column="id" property="id"/>
+		<result column="code" property="code" />
+		
+		<result column="teacher_code" property="teacherCode" />
+		<result column="homework_name" property="homeworkName" />	
+		<result column="grade_standard" property="gradeStandard" />	
+		<result column="type" property="type" />	
+			
+		<result column="nameInDictionary" property="typeName" />
+		
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="creator" property="creator" />
+		<result column="updater" property="updater" />
+		<result column="is_delete" property="isDelete" />
+		<result column="is_effect" property="isEffect" /> 
+		<result column="descr" property="descr" /> 
+		
+	</resultMap> 
+    <select id="selectAasignmentAndDictionary" resultMap="BaseResultMap2" parameterType="Object">
+		select <include refid="Base_Column_List2" />,	       
+		     d.name  nameInDictionary
+		from  assignment a
+		     left join dictionary d  on a.type = d.code	
+	   <include refid="Example_Where_Clause" /> 
+	   <if test="pager.orderCondition != null and pager.orderCondition != ''">
+			${pager.orderCondition}
+	   </if>
+	</select>
+
+
+</mapper>
